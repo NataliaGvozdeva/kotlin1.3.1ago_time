@@ -41,12 +41,12 @@ fun timeStrToSeconds(str: String): Int {
     }
 }
 
-fun agoToText(seconds: Int = 0) = when {
-    ((seconds >= 0) && (seconds <= 59)) -> "только что"
-    ((seconds >= 60) && (seconds <= (60 * 60 - 1))) -> "${formOfOutputMinutes(seconds)} назад"
-    ((seconds >= (60 * 60)) && (seconds <= (60 * 60 * 24 - 1))) -> "${formOfOutputHours(seconds)} назад"
-    ((seconds >= (24 * 60 * 60)) && (seconds <= (24 * 60 * 60 * 2 - 1))) -> "сегодня"
-    ((seconds >= (24 * 60 * 60 * 2)) && (seconds <= (24 * 60 * 60 * 3 - 1))) -> "вчера"
+fun agoToText(seconds: Int = 0) = when (seconds) {
+    in 0 until 60 -> "только что"
+    in 60 until 60 * 60 -> "${formOfOutputMinutes(seconds)} назад"
+    in 60 * 60 until 60 * 60 * 24 -> "${formOfOutputHours(seconds)} назад"
+    in 24 * 60 * 60 until 24 * 60 * 60 * 2 -> "сегодня"
+    in 24 * 60 * 60 * 2 until 24 * 60 * 60 * 3 -> "вчера"
     else -> "давно"
 }
 
@@ -54,10 +54,9 @@ fun convertToMin(seconds: Int): Int = (seconds / 60)
 
 fun formOfOutputMinutes(seconds: Int = 0): String {
     val countMinutes = convertToMin(seconds)
-    return when {
-        ((countMinutes == 1) || ((countMinutes - 1) % 10 == 0)) -> "$countMinutes минуту"
-        ((countMinutes >= 2) && (countMinutes <= 4) || ((countMinutes - 2) % 10 == 0) ||
-                ((countMinutes - 3) % 10 == 0) || ((countMinutes - 4) % 10 == 0)) -> "$countMinutes минуты"
+    return when (countMinutes % 10) {
+        1 -> "$countMinutes минуту"
+        2, 3, 4 -> "$countMinutes минуты"
         else -> "$countMinutes минут"
     }
 }
@@ -66,10 +65,9 @@ fun convertToHours(seconds: Int): Int = (seconds / (60 * 60))
 
 fun formOfOutputHours(seconds: Int = 0): String {
     val countHours = convertToHours(seconds)
-    return when {
-        ((countHours == 1) || ((countHours - 1) % 10 == 0)) -> "$countHours час"
-        ((countHours >= 2) && (countHours <= 4) || ((countHours - 2) % 10 == 0) ||
-                ((countHours - 3) % 10 == 0) || ((countHours - 4) % 10 == 0)) -> "$countHours часа"
+    return when (countHours) {
+        1, 21 -> "$countHours час"
+        2, 3, 4, 22, 23 -> "$countHours часа"
         else -> "$countHours часов"
     }
 }
